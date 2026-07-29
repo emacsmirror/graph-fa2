@@ -3,7 +3,7 @@
 ;; Author: Elijah Charles
 ;; URL: https://github.com/elijah/graph-fa2
 ;; Keywords: multimedia, graphs, visualization
-;; Version: 0.2.0
+;; Version: 0.2.1
 ;; Package-Requires: ((emacs "27.1"))
 
 ;;; Commentary:
@@ -178,7 +178,8 @@ Each function must accept one argument: the node identifier.")
 
 (defvar-local graph-fa2-node-hovered-functions nil
   "List of functions to be called when a mouse hovers over a graph node.
-Each function must accept one argument: the node identifier, or \\='nil\\=' if cleared.")
+Each function must accept one argument: the node identifier,
+or \\='nil\\=' if cleared.")
 
 (defvar-local graph-fa2--scale 1.0
   "Current zoom scale for the background engine.")
@@ -223,7 +224,7 @@ Each function must accept one argument: the node identifier, or \\='nil\\=' if c
   "Vector of identifiers and coordinates for current frame.")
 
 (defvar-local graph-fa2-hovered-node nil
-  "Tracks currently hovered node within the 'graph-fa2' engine.")
+  "Tracks currently hovered node within the \\='graph-fa2\\=' engine.")
 
 (defvar-local graph-fa2--drag-context nil
   "The current drag context of the graph viewport.")
@@ -232,7 +233,7 @@ Each function must accept one argument: the node identifier, or \\='nil\\=' if c
   "Hook run after a graph frame is rendered.")
 
 (cl-defstruct graph-fa2-ctx
-  "State structure 'graph-fa2-ctx' for ForceAtlas2 physics simulation.
+  "State structure \\='graph-fa2-ctx\\=' for ForceAtlas2 physics simulation.
 Contains node and edge definitions, pre-allocated vectors to minimise
 garbage collection pressure, and running animation state."
   nodes
@@ -261,7 +262,7 @@ garbage collection pressure, and running animation state."
   tick-rep-computed)
 
 (defvar-local graph-fa2-ctx nil
-  "Buffer-local 'graph-fa2-ctx' simulation context.")
+  "Buffer-local \\='graph-fa2-ctx\\=' simulation context.")
 
 (defmacro graph-fa2-vec-add (arr-x arr-y arr-z idx dx dy dz)
   "In-place addition of DX, DY, DZ into ARR-X, ARR-Y, ARR-Z at IDX."
@@ -858,7 +859,7 @@ This is the inverse of the XML escape function."
     (- (random 1000) 500.0)))
 
 (defun graph-fa2--create-ctx (nodes edges)
-  "Create and initialise a 'graph-fa2-ctx' struct from NODES and EDGES.
+  "Create and initialise a \\='graph-fa2-ctx\\=' struct from NODES and EDGES.
 This pre-allocates the nine physics vectors for 3D simulation to completely
 eliminate garbage collection pressure during background rendering."
   (let ((degree-map (make-hash-table :test #'equal)))
