@@ -3,7 +3,7 @@
 ;; Author: Elijah Charles
 ;; URL: https://github.com/elijah/graph-fa2
 ;; Keywords: multimedia, graphs, visualization
-;; Version: 0.2.1
+;; Version: 0.2.2
 ;; Package-Requires: ((emacs "27.1"))
 
 ;;; Commentary:
@@ -1857,7 +1857,7 @@ the same buffer."
         (add-hook 'window-size-change-functions #'graph-fa2--update-display nil t)
         (add-hook 'window-selection-change-functions #'graph-fa2--cancel-drag nil t)
         (if (boundp 'after-focus-change-function)
-            (add-hook 'after-focus-change-function #'graph-fa2--cancel-drag nil t)
+            (add-function :after (local 'after-focus-change-function) #'graph-fa2--cancel-drag)
           (with-no-warnings
             (add-hook 'focus-out-hook #'graph-fa2--cancel-drag nil t))))
     (progn
@@ -1865,7 +1865,7 @@ the same buffer."
       (remove-hook 'window-size-change-functions #'graph-fa2--update-display t)
       (remove-hook 'window-selection-change-functions #'graph-fa2--cancel-drag t)
       (if (boundp 'after-focus-change-function)
-          (remove-hook 'after-focus-change-function #'graph-fa2--cancel-drag t)
+          (remove-function (local 'after-focus-change-function) #'graph-fa2--cancel-drag)
         (with-no-warnings
           (remove-hook 'focus-out-hook #'graph-fa2--cancel-drag t)))
       (let ((overlays (overlays-in (point-min) (point-max))))
