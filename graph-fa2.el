@@ -1,10 +1,11 @@
 ;;; graph-fa2.el --- ForceAtlas2 pure-elisp background-cached engine -*- lexical-binding: t -*-
 
-;; Author: Elijah Charles
-;; URL: https://github.com/elijah/graph-fa2
+;; Author: Elijah Charles <https://github.com/elij>
+;; URL: https://github.com/elij/graph-fa2
 ;; Keywords: multimedia, graphs, visualization
-;; Version: 0.2.2
+;; Version: 0.2.3
 ;; Package-Requires: ((emacs "27.1"))
+;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; Commentary:
 
@@ -297,71 +298,71 @@ garbage collection pressure, and running animation state."
      (cl-incf graph-fa2--pan-x ,dx)
      (cl-incf graph-fa2--pan-y ,dy)))
 
-(defsubst fa2-id (n)
+(defsubst graph-fa2-id (n)
   "Return identifier of node N."
   (aref n 0))
 
-(defsubst fa2-label (n)
+(defsubst graph-fa2-label (n)
   "Return label of node N."
   (aref n 1))
 
-(defsubst fa2-x (n)
+(defsubst graph-fa2-x (n)
   "Return X coordinate of node N."
   (aref n 2))
 
-(defsubst fa2-y (n)
+(defsubst graph-fa2-y (n)
   "Return Y coordinate of node N."
   (aref n 3))
 
-(defsubst fa2-z (n)
+(defsubst graph-fa2-z (n)
   "Return Z coordinate of node N."
   (aref n 4))
 
-(defsubst fa2-dx (n)
+(defsubst graph-fa2-dx (n)
   "Return X velocity of node N."
   (aref n 5))
 
-(defsubst fa2-dy (n)
+(defsubst graph-fa2-dy (n)
   "Return Y velocity of node N."
   (aref n 6))
 
-(defsubst fa2-dz (n)
+(defsubst graph-fa2-dz (n)
   "Return Z velocity of node N."
   (aref n 7))
 
-(defsubst fa2-mass (n)
+(defsubst graph-fa2-mass (n)
   "Return mass of node N."
   (aref n 8))
 
-(defsubst fa2-colour (n)
+(defsubst graph-fa2-colour (n)
   "Return colour string of node N."
   (aref n 9))
 
-(defsubst fa2-radius (n)
+(defsubst graph-fa2-radius (n)
   "Return radius of node N."
   (aref n 10))
 
-(defsubst fa2-set-x (n v)
+(defsubst graph-fa2-set-x (n v)
   "Set X coordinate of node N to V."
   (aset n 2 v))
 
-(defsubst fa2-set-y (n v)
+(defsubst graph-fa2-set-y (n v)
   "Set Y coordinate of node N to V."
   (aset n 3 v))
 
-(defsubst fa2-set-z (n v)
+(defsubst graph-fa2-set-z (n v)
   "Set Z coordinate of node N to V."
   (aset n 4 v))
 
-(defsubst fa2-set-dx (n v)
+(defsubst graph-fa2-set-dx (n v)
   "Set X velocity of node N to V."
   (aset n 5 v))
 
-(defsubst fa2-set-dy (n v)
+(defsubst graph-fa2-set-dy (n v)
   "Set Y velocity of node N to V."
   (aset n 6 v))
 
-(defsubst fa2-set-dz (n v)
+(defsubst graph-fa2-set-dz (n v)
   "Set Z velocity of node N to V."
   (aset n 7 v))
 
@@ -521,7 +522,7 @@ CURR-X and CURR-Y are current coordinates, and VIEWBOX-SCALE is scale."
               (new-y (+ orig-y canvas-dy))
               (nodes (graph-fa2-ctx-nodes ctx))
               (len (length nodes))
-              (idx (seq-position nodes node-id (lambda (n id) (equal (fa2-id n) id))))
+              (idx (seq-position nodes node-id (lambda (n id) (equal (graph-fa2-id n) id))))
               (new-coords (graph-fa2-denormalise-coords new-x new-y orig-z))
               (internal-x (car new-coords))
               (internal-y (cadr new-coords))
@@ -706,7 +707,7 @@ playback buffer to find the physics context struct."
       (puthash (aref hb 0) hb hitbox-map))
     (dotimes (i len)
       (let* ((n (aref nodes i))
-             (n-id (fa2-id n)))
+             (n-id (graph-fa2-id n)))
         (when-let*
             ((hitbox (gethash n-id hitbox-map))
              (depth (if (> (length hitbox) 4) (aref hitbox 4) 0.0))
@@ -901,7 +902,7 @@ eliminate garbage collection pressure during background rendering."
                 (when (> j i)
                   (let ((nj (aref internal-nodes j)))
                     (aset matrix (+ (* i len) j)
-                          (truncate (* 50.0 (fa2-mass ni) (fa2-mass nj)))))))))
+                          (truncate (* 50.0 (graph-fa2-mass ni) (graph-fa2-mass nj)))))))))
           (let* ((pos-x (make-vector len 0))
                  (pos-y (make-vector len 0))
                  (pos-z (make-vector len 0))
@@ -913,9 +914,9 @@ eliminate garbage collection pressure during background rendering."
                  (rep-z (make-vector len 0)))
             (dotimes (i len)
               (let ((n (aref internal-nodes i)))
-                (aset pos-x i (fa2-x n))
-                (aset pos-y i (fa2-y n))
-                (aset pos-z i (fa2-z n))))
+                (aset pos-x i (graph-fa2-x n))
+                (aset pos-y i (graph-fa2-y n))
+                (aset pos-z i (graph-fa2-z n))))
             (make-graph-fa2-ctx
              :nodes internal-nodes
              :edges (nreverse internal-edges)
@@ -1074,7 +1075,7 @@ Allows treating a chain of mutating functions as a single pipeline."
              (max-n (if (> abs-nx abs-ny) abs-nx abs-ny))
              (min-n (if (> abs-nx abs-ny) abs-ny abs-nx))
              (dist (if (= max-n 0) 1 (+ max-n (ash (truncate min-n) -1))))
-             (mass (truncate (fa2-mass (aref nodes i))))
+             (mass (truncate (graph-fa2-mass (aref nodes i))))
              (num (* a mass))
              (den (ash (truncate dist) 8))
              (fdx (/ (* nx num) den))
@@ -1242,7 +1243,7 @@ Allows treating a chain of mutating functions as a single pipeline."
              (ny (aref pos-y i))
              (nz (aref pos-z i))
              (dist (max 1 (graph-fa2--dist-3d nx ny nz)))
-             (mass (truncate (fa2-mass (aref nodes i))))
+             (mass (truncate (graph-fa2-mass (aref nodes i))))
              (num (* a mass))
              (den (max 1 (ash dist 8)))
              (fdx (/ (* nx num) den))
@@ -1345,12 +1346,12 @@ Allows treating a chain of mutating functions as a single pipeline."
         (vel-z (graph-fa2-ctx-vel-z ctx)))
     (dotimes (i total-nodes)
       (let ((n (aref nodes i)))
-        (fa2-set-x n (aref pos-x i))
-        (fa2-set-y n (aref pos-y i))
-        (fa2-set-z n (aref pos-z i))
-        (fa2-set-dx n (aref vel-x i))
-        (fa2-set-dy n (aref vel-y i))
-        (fa2-set-dz n (aref vel-z i))))))
+        (graph-fa2-set-x n (aref pos-x i))
+        (graph-fa2-set-y n (aref pos-y i))
+        (graph-fa2-set-z n (aref pos-z i))
+        (graph-fa2-set-dx n (aref vel-x i))
+        (graph-fa2-set-dy n (aref vel-y i))
+        (graph-fa2-set-dz n (aref vel-z i))))))
 
 (defun graph-fa2--render-svg (ctx len)
   "Render layout integer arrays in CTX for LEN nodes to SVG string.
@@ -1393,10 +1394,10 @@ all floats to standard decimal format to prevent scientific notation crash."
                (nx (format "%.3f" nx-float))
                (ny (format "%.3f" ny-float))
                (nz (format "%.3f" nz-float))
-               (id (fa2-id n))
-               (label (fa2-label n))
-               (radius (fa2-radius n))
-               (colour (fa2-colour n))
+               (id (graph-fa2-id n))
+               (label (graph-fa2-label n))
+               (radius (graph-fa2-radius n))
+               (colour (graph-fa2-colour n))
                (name-escaped (graph-fa2--escape-xml label))
                (lines (graph-fa2--wrap-text name-escaped graph-fa2-label-wrap-chars))
                (line-height (max 1 (round (* graph-fa2-label-font-size 1.2))))
@@ -1856,18 +1857,12 @@ the same buffer."
         (setq-local track-mouse t)
         (add-hook 'window-size-change-functions #'graph-fa2--update-display nil t)
         (add-hook 'window-selection-change-functions #'graph-fa2--cancel-drag nil t)
-        (if (boundp 'after-focus-change-function)
-            (add-function :after (local 'after-focus-change-function) #'graph-fa2--cancel-drag)
-          (with-no-warnings
-            (add-hook 'focus-out-hook #'graph-fa2--cancel-drag nil t))))
+        (add-function :after (local 'after-focus-change-function) #'graph-fa2--cancel-drag))
     (progn
       (setq-local track-mouse nil)
       (remove-hook 'window-size-change-functions #'graph-fa2--update-display t)
       (remove-hook 'window-selection-change-functions #'graph-fa2--cancel-drag t)
-      (if (boundp 'after-focus-change-function)
-          (remove-function (local 'after-focus-change-function) #'graph-fa2--cancel-drag)
-        (with-no-warnings
-          (remove-hook 'focus-out-hook #'graph-fa2--cancel-drag t)))
+      (remove-function (local 'after-focus-change-function) #'graph-fa2--cancel-drag)
       (let ((overlays (overlays-in (point-min) (point-max))))
         (dolist (o overlays)
           (when (overlay-get o 'window)

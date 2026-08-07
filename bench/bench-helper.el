@@ -1,5 +1,10 @@
 ;;; bench/bench-helper.el -*- lexical-binding: t; no-byte-compile: t;-*-
 
+;;; Commentary:
+;; Helper utilities used across benchmark tests.
+
+;;; Code:
+
 (require 'buttercup)
 
 (defmacro graph-fa2-expect-faster (baseline-form optimised-form iterations)
@@ -52,3 +57,4 @@ Assert that OPTIMISED-FORM executes faster than BASELINE-FORM and log garbage co
     (list nodes edges)))
 
 (provide 'bench-helper)
+;;; bench-helper.el ends here
