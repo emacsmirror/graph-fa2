@@ -1,6 +1,7 @@
 <div align="center">
 
 # graph-fa2
+[![MELPA](https://melpa.org/packages/graph-fa2-badge.svg)](https://melpa.org/#/graph-fa2)
 
 graph-fa2 is a pure Emacs Lisp ForceAtlas2 graph layout engine with SVG rendering. It enables network graph visualisations directly within Emacs buffers without requiring an external browser engine or external process dependencies.</div>
 
