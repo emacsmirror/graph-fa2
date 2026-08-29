@@ -1,5 +1,8 @@
 ;;; test-engine-benchmarks.el --- Benchmark suite for graph-fa2 -*- lexical-binding: t; no-byte-compile: t;-*-
 
+(add-to-list 'load-path (file-name-directory (or load-file-name (buffer-file-name) default-directory)))
+(add-to-list 'load-path (expand-file-name ".." (file-name-directory (or load-file-name (buffer-file-name) default-directory))))
+
 (require 'buttercup)
 (require 'graph-fa2)
 (require 'graph-fa2-baseline)
@@ -48,3 +51,6 @@
            2)
         (when (buffer-live-p target-buf)
           (kill-buffer target-buf))))))
+
+(provide 'test-engine-benchmarks)
+;;; test-engine-benchmarks.el ends here
